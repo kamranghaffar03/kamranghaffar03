@@ -1,12 +1,93 @@
-For the following dataset:
-x1 = c(12,8,9,9,11,9,8,11,10,11);
-x2 = c(4,7,5,6,4,6,7,5,5,4);
-x3 = c(1,4,3,3,1,2,4,1,2,1);
-Tasks
-1. Calculate the Pearson correlation between x1 and x2, x1 and x3, as well as x2 and x3. Which pair has the
-highest correlation? 
-2. Create a ranked version of each vector.
-3. Compare the Pearson and Spearman correlations between all vectors. 
-4. Estimate the covariance matrix for (x1, x2, x3). Note: This matrix should be 3 by 3. 
-5. Using the covariance matrix, estimate the eigenvalues and eigenvectors. 
-6. Plot a scatter plot of x1 against x2, including the respective principal vectors. 
+### Task 1: Calculate Pearson Correlation
+
+
+# Dataset
+x1 = c(12, 8, 9, 9, 11, 9, 8, 11, 10, 11)
+x2 = c(4, 7, 5, 6, 4, 6, 7, 5, 5, 4)
+x3 = c(1, 4, 3, 3, 1, 2, 4, 1, 2, 1)
+
+# Calculate Pearson correlation
+cor_x1_x2 = cor(x1, x2)
+cor_x1_x3 = cor(x1, x3)
+cor_x2_x3 = cor(x2, x3)
+
+# Find the pair with the highest correlation
+max_correlation = max(cor_x1_x2, cor_x1_x3, cor_x2_x3)
+max_pair = switch(max_correlation, cor_x1_x2 = "x1 and x2", cor_x1_x3 = "x1 and x3", cor_x2_x3 = "x2 and x3")
+
+# Print results
+cat("Correlation between x1 and x2:", cor_x1_x2, "\n")
+cat("Correlation between x1 and x3:", cor_x1_x3, "\n")
+cat("Correlation between x2 and x3:", cor_x2_x3, "\n")
+cat("Pair with the highest correlation:", max_pair, "with correlation value:", max_correlation, "\n")
+
+
+### Task 2: Create a ranked version of each vector
+
+# Create ranked versions
+rank_x1 = rank(x1)
+rank_x2 = rank(x2)
+rank_x3 = rank(x3)
+
+# Print results
+cat("Ranked x1:", rank_x1, "\n")
+cat("Ranked x2:", rank_x2, "\n")
+cat("Ranked x3:", rank_x3, "\n")
+
+
+### Task 3: Compare Pearson and Spearman correlations
+
+# Calculate Spearman correlation
+spearman_cor_x1_x2 = cor(rank_x1, rank_x2, method = "spearman")
+spearman_cor_x1_x3 = cor(rank_x1, rank_x3, method = "spearman")
+spearman_cor_x2_x3 = cor(rank_x2, rank_x3, method = "spearman")
+
+# Print results
+cat("Pearson correlation between x1 and x2:", cor_x1_x2, "\n")
+cat("Spearman correlation between x1 and x2:", spearman_cor_x1_x2, "\n")
+
+cat("Pearson correlation between x1 and x3:", cor_x1_x3, "\n")
+cat("Spearman correlation between x1 and x3:", spearman_cor_x1_x3, "\n")
+
+cat("Pearson correlation between x2 and x3:", cor_x2_x3, "\n")
+cat("Spearman correlation between x2 and x3:", spearman_cor_x2_x3, "\n")
+
+
+### Task 4: Estimate the covariance matrix
+
+
+# Create a matrix with x1, x2, x3
+data_matrix = matrix(c(x1, x2, x3), nrow = 10, ncol = 3)
+
+# Estimate the covariance matrix
+cov_matrix = cov(data_matrix)
+
+# Print covariance matrix
+cat("Covariance Matrix:\n")
+print(cov_matrix)
+
+
+### Task 5: Estimate eigenvalues and eigenvectors
+
+# Estimate eigenvalues and eigenvectors
+eigen_result = eigen(cov_matrix)
+
+# Print results
+cat("Eigenvalues:\n")
+print(eigen_result$values)
+
+cat("Eigenvectors:\n")
+print(eigen_result$vectors)
+
+
+### Task 6: Plot a scatter plot of x1 against x2 with principal vectors
+
+# Plot scatter plot
+plot(x1, x2, main = "Scatter Plot of x1 against x2 with Principal Vectors", xlab = "x1", ylab = "x2")
+
+# Add principal vectors
+arrows(0, 0, eigen_result$vectors[1, 1], eigen_result$vectors[2, 1], angle = 10, length = 0.1, col = "red")
+arrows(0, 0, eigen_result$vectors[1, 2], eigen_result$vectors[2, 2], angle = 10, length = 0.1, col = "blue")
+
+# Add legend
+legend("topright", legend = c("Principal Vector 1", "Principal Vector 2"), col = c("red", "blue"), lty = 1)
